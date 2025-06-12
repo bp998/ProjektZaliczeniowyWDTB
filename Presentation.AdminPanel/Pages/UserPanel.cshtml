@@ -1,0 +1,9 @@
+﻿@page
+@model UserPanelModel
+@{
+    ViewData["Title"] = "Panel użytkownika";
+}
+
+<h2>Panel użytkownika</h2>
+<p>Witaj, @User.Identity.Name!</p>
+<p><a href="/Logout">Wyloguj</a></p>

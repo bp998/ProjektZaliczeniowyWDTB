@@ -1,5 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs;
+using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApi.Controllers;
@@ -19,29 +21,55 @@ public class CourseController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var courses = await _repository.GetAllAsync();
-        return Ok(courses);
+        var result = courses.Select(c => new CourseDto
+        {
+            Id = c.Id,
+            Title = c.Title,
+            Description = c.Description
+        });
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var course = await _repository.GetByIdAsync(id);
-        if (course is null) return NotFound();
-        return Ok(course);
+        var c = await _repository.GetByIdAsync(id);
+        if (c is null) return NotFound();
+
+        var dto = new CourseDto
+        {
+            Id = c.Id,
+            Title = c.Title,
+            Description = c.Description
+        };
+
+        return Ok(dto);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Course course)
+    public async Task<IActionResult> Create([FromBody] CourseDto dto)
     {
+        var course = new Course
+        {
+            Title = dto.Title,
+            Description = dto.Description
+        };
+
         await _repository.AddAsync(course);
-        return CreatedAtAction(nameof(Get), new { id = course.Id }, course);
+        return CreatedAtAction(nameof(Get), new { id = course.Id }, dto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Course course)
+    public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
     {
-        if (id != course.Id) return BadRequest();
-        await _repository.UpdateAsync(course);
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing is null) return NotFound();
+
+        existing.Title = dto.Title;
+        existing.Description = dto.Description;
+
+        await _repository.UpdateAsync(existing);
         return NoContent();
     }
 

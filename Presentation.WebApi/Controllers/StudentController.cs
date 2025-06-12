@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs;
+using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,29 +20,59 @@ public class StudentController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var students = await _repository.GetAllAsync();
-        return Ok(students);
+        var result = students.Select(s => new StudentDto
+        {
+            Id = s.Id,
+            FirstName = s.FirstName,
+            LastName = s.LastName,
+            BirthDate = s.BirthDate
+        });
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var student = await _repository.GetByIdAsync(id);
-        if (student is null) return NotFound();
-        return Ok(student);
+        var s = await _repository.GetByIdAsync(id);
+        if (s is null) return NotFound();
+
+        var dto = new StudentDto
+        {
+            Id = s.Id,
+            FirstName = s.FirstName,
+            LastName = s.LastName,
+            BirthDate = s.BirthDate
+        };
+
+        return Ok(dto);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Student student)
+    public async Task<IActionResult> Create([FromBody] StudentDto dto)
     {
+        var student = new Student
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            BirthDate = dto.BirthDate
+        };
+
         await _repository.AddAsync(student);
-        return CreatedAtAction(nameof(Get), new { id = student.Id }, student);
+        return CreatedAtAction(nameof(Get), new { id = student.Id }, dto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Student student)
+    public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
     {
-        if (id != student.Id) return BadRequest();
-        await _repository.UpdateAsync(student);
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing is null) return NotFound();
+
+        existing.FirstName = dto.FirstName;
+        existing.LastName = dto.LastName;
+        existing.BirthDate = dto.BirthDate;
+
+        await _repository.UpdateAsync(existing);
         return NoContent();
     }
 

@@ -13,6 +13,8 @@ public class AppDbContext : DbContext
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
 
+    public DbSet<User> Users => Set<User>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

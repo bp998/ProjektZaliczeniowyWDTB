@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-public class IndexModel : PageModel
+public class LoginModel : PageModel
 {
     [BindProperty]
     public string Username { get; set; } = "";
@@ -30,6 +30,7 @@ public class IndexModel : PageModel
         var json = await response.Content.ReadAsStringAsync();
         var jwt = JsonDocument.Parse(json).RootElement.GetProperty("token").GetString();
 
+        // Dekoduj token i ustaw tożsamość
         var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(jwt);
         var claims = token.Claims.ToList();
@@ -39,13 +40,7 @@ public class IndexModel : PageModel
 
         await HttpContext.SignInAsync("CookieAuth", principal);
 
-        var role = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
-        return role switch
-        {
-            "Admin" => RedirectToPage("/Admin"),
-            "User" => RedirectToPage("/UserPanel"),
-            _ => RedirectToPage("/Index")
-        };
+        // Przekierowanie na panel
+        return RedirectToPage("/Admin");
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Infrastructure.Persistance;
 
@@ -47,6 +49,31 @@ public static class DbSeeder
             Course = course2,
             EnrolledAt = DateTime.UtcNow
         };
+
+        var admin = new User
+        {
+            Username = "admin",
+            PasswordHash = HashPassword("admin123"),
+            Role = "Admin"
+        };
+
+        var user = new User
+        {
+            Username = "user",
+            PasswordHash = HashPassword("user123"),
+            Role = "User"
+        };
+
+        context.Users.AddRange(admin, user);
+
+        static string HashPassword(string password)
+        {
+            using var sha = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
+        }
+
 
         context.Students.AddRange(student1, student2);
         context.Courses.AddRange(course1, course2);
