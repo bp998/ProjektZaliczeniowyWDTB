@@ -79,4 +79,33 @@ Aby w pełni przetestować wszystkie funkcjonalności aplikacji, **zaleca się u
 
 ## Testowanie
 
-Uruchomienie testów jednostkowych:
+### Uruchomienie testów jednostkowych:
+``` bash
+dotnet test Tests.Unit
+```
+
+Zawartość pokrywa testami m.in.:
+
+1. Repozytoria (Student, Course, Enrollment)
+
+2. AuthService (generowanie JWT)
+
+3. Kontrolery REST API
+
+### Przykładowe zapytania GraphQL:
+```
+query {
+  students {
+    id
+    firstName
+    lastName
+    birthDate
+  }
+}
+
+mutation {
+  addStudent(firstName: "Anna", lastName: "Nowak", birthDate: "2000-01-01") {
+    id
+  }
+}
+```
