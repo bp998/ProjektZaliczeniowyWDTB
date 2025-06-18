@@ -309,6 +309,10 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
+# Testowy skrypt
+/api-test.sh
+
+
 # CodeRush personal settings
 .cr/personal
 

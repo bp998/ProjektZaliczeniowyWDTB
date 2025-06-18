@@ -1,0 +1,62 @@
+﻿### Logowanie jako admin (zwraca token)
+POST http://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Zapisz token z poprzedniego zapytania jako zmienną (w VS Code/Visual Studio)
+@token = {{login.response.body.token}}
+
+### Dodaj studenta
+POST http://localhost:5001/api/student
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstName": "Anna",
+  "lastName": "Nowak",
+  "birthDate": "2000-01-01"
+}
+
+### Dodaj kurs
+POST http://localhost:5001/api/course
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "GraphQL",
+  "description": "Wprowadzenie do GraphQL"
+}
+
+### Pobierz listę studentów
+GET http://localhost:5001/api/student
+Authorization: Bearer {{token}}
+
+### Pobierz listę kursów
+GET http://localhost:5001/api/course
+Authorization: Bearer {{token}}
+
+### Zapisz studenta na kurs
+# Wypełnij ręcznie ID studenta i kursu po wcześniejszych zapytaniach
+POST http://localhost:5001/api/enrollment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "studentId": "GUID-STUDENTA-TUTAJ",
+  "courseId": "GUID-KURSU-TUTAJ",
+  "enrolledAt": "2025-06-18T22:30:00Z"
+}
+
+### Usuń studenta
+# Wstaw prawidłowy ID studenta
+DELETE http://localhost:5001/api/student/GUID-STUDENTA-TUTAJ
+Authorization: Bearer {{token}}
+
+### Usuń kurs
+# Wstaw prawidłowy ID kursu
+DELETE http://localhost:5001/api/course/GUID-KURSU-TUTAJ
+Authorization: Bearer {{token}}
