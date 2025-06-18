@@ -1,0 +1,19 @@
+﻿@page
+@model AddCourseModel
+@{
+    ViewData["Title"] = "Dodaj kurs";
+}
+
+<h2>Dodaj kurs</h2>
+
+<form method="post">
+    <div>
+        <label>Tytuł</label>
+        <input asp-for="Course.Title" />
+    </div>
+    <div>
+        <label>Opis</label>
+        <textarea asp-for="Course.Description"></textarea>
+    </div>
+    <button type="submit">Zapisz</button>
+</form>

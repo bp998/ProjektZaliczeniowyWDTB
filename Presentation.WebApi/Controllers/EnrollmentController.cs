@@ -1,10 +1,12 @@
 ﻿using Application.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class EnrollmentController : ControllerBase
@@ -13,9 +15,10 @@ public class EnrollmentController : ControllerBase
     private readonly IStudentRepository _studentRepository;
     private readonly ICourseRepository _courseRepository;
 
-    public EnrollmentController(IEnrollmentRepository repository,
-                                IStudentRepository studentRepository,
-                                ICourseRepository courseRepository)
+    public EnrollmentController(
+        IEnrollmentRepository repository,
+        IStudentRepository studentRepository,
+        ICourseRepository courseRepository)
     {
         _repository = repository;
         _studentRepository = studentRepository;
@@ -55,6 +58,7 @@ public class EnrollmentController : ControllerBase
         return Ok(dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] EnrollmentCreateDto dto)
     {
@@ -76,9 +80,19 @@ public class EnrollmentController : ControllerBase
         };
 
         await _repository.AddAsync(enrollment);
-        return CreatedAtAction(nameof(Get), new { id = enrollment.Id }, dto);
+
+        var resultDto = new EnrollmentDto
+        {
+            Id = enrollment.Id,
+            EnrolledAt = enrollment.EnrolledAt,
+            StudentName = $"{student.FirstName} {student.LastName}",
+            CourseTitle = course.Title
+        };
+
+        return CreatedAtAction(nameof(Get), new { id = enrollment.Id }, resultDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

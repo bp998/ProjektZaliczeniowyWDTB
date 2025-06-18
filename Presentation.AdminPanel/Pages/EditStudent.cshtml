@@ -1,0 +1,26 @@
+﻿@page "{id:guid}"
+@model EditStudentModel
+@{
+    Layout = "_Layout";
+}
+
+<h2>Edytuj Studenta</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Student.Id" />
+
+    <div>
+        <label asp-for="Student.FirstName"></label>
+        <input asp-for="Student.FirstName" />
+    </div>
+    <div>
+        <label asp-for="Student.LastName"></label>
+        <input asp-for="Student.LastName" />
+    </div>
+    <div>
+        <label asp-for="Student.BirthDate"></label>
+        <input asp-for="Student.BirthDate" type="date" />
+    </div>
+
+    <button type="submit">Zapisz zmiany</button>
+</form>

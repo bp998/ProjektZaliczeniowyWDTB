@@ -1,3 +1,7 @@
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.SystemTextJson;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,8 +13,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", options =>
     {
-        options.LoginPath = "/Login";
+        options.LoginPath = "/";
     });
+
+builder.Services.AddSingleton<IGraphQLClient>(s =>
+    new GraphQLHttpClient("http://localhost:5000/graphql", new SystemTextJsonSerializer()));
 
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();

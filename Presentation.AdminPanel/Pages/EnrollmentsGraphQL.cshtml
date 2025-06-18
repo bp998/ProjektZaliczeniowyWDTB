@@ -1,0 +1,26 @@
+﻿@page
+@model EnrollmentsGraphQLModel
+@{
+    ViewData["Title"] = "Enrollments (GraphQL)";
+}
+
+<h2>Enrollments (GraphQL)</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Enrollments)
+        {
+            <tr>
+                <td>@e.StudentName</td>
+                <td>@e.CourseTitle</td>
+                <td>@e.EnrolledAt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

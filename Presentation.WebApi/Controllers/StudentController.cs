@@ -1,10 +1,12 @@
 ﻿using Application.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class StudentController : ControllerBase
@@ -48,8 +50,9 @@ public class StudentController : ControllerBase
         return Ok(dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] StudentDto dto)
+    public async Task<IActionResult> Create([FromBody] StudentCreateDto dto)
     {
         var student = new Student
         {
@@ -59,9 +62,20 @@ public class StudentController : ControllerBase
         };
 
         await _repository.AddAsync(student);
-        return CreatedAtAction(nameof(Get), new { id = student.Id }, dto);
+
+        var resultDto = new StudentDto
+        {
+            Id = student.Id,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            BirthDate = student.BirthDate
+        };
+
+        return CreatedAtAction(nameof(Get), new { id = student.Id }, resultDto);
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
     {
@@ -76,6 +90,7 @@ public class StudentController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

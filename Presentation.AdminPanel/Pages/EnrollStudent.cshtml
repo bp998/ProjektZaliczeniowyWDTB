@@ -1,0 +1,35 @@
+﻿@page
+@model EnrollStudentModel
+@{
+    ViewData["Title"] = "Zapisz studenta na kurs";
+}
+
+<h2>Zapisz studenta na kurs</h2>
+
+<form method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Enrollment.StudentId" class="form-label">Student</label>
+        <select asp-for="Enrollment.StudentId" class="form-control" asp-items="@(new SelectList(Model.Students, "Id", "FullName"))">
+            <option value="">-- wybierz studenta --</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Enrollment.CourseId" class="form-label">Kurs</label>
+        <select asp-for="Enrollment.CourseId" class="form-control" asp-items="@(new SelectList(Model.Courses, "Id", "Title"))">
+            <option value="">-- wybierz kurs --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-3">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

@@ -1,11 +1,8 @@
 ﻿namespace Application.DTOs;
 
-public class StudentDto
+public class StudentCreateDto
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
-
-    public string FullName { get; set; } = "";
 }

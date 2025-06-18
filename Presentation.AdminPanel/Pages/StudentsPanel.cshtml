@@ -1,0 +1,46 @@
+﻿@page
+@model StudentsPanelModel
+@{
+    ViewData["Title"] = "Zarządzanie Studentami";
+    Layout = "_Layout";
+}
+
+<h2>Zarządzanie Studentami</h2>
+
+<p>
+    <a class="btn btn-primary" asp-page="/AddStudent">Dodaj nowego studenta</a>
+</p>
+
+@if (!Model.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Model.ModelState[""].Errors.FirstOrDefault()?.ErrorMessage
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Data urodzenia</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model.Students)
+        {
+            <tr>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+                <td>@student.BirthDate.ToShortDateString()</td>
+                <td>
+                    <a class="btn-warning btn-sm" asp-page="/EditStudent" asp-route-id="@student.Id">Edytuj</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@student.Id" style="display:inline;" onsubmit="return confirm('Na pewno chcesz usunąć tego studenta?');">
+                        <button class="btn-danger btn-sm" type="submit">Usuń</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,18 +1,29 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Logowanie";
+    Layout = "_Layout";
 }
 
-<h2>Logowanie</h2>
+<h2>Zaloguj się</h2>
+
+<!-- Wskazówki dla testera -->
+<p><strong>Admin:</strong> login: <code>admin</code>, hasło: <code>admin123</code></p>
+<p><strong>Użytkownik:</strong> login: <code>user</code>, hasło: <code>user123</code></p>
 
 <form method="post">
-    <label>Login: <input asp-for="Username" /></label><br />
-    <label>Hasło: <input asp-for="Password" type="password" /></label><br />
-    <button type="submit">Zaloguj</button>
-</form>
+    <div>
+        <label for="username">Nazwa użytkownika:</label>
+        <input type="text" name="Username" id="username" required />
+    </div>
+    <div>
+        <label for="password">Hasło:</label>
+        <input type="password" name="Password" id="password" required />
+    </div>
 
-@if (Model.ErrorMessage is not null)
-{
-    <p style="color:red">@Model.ErrorMessage</p>
-}
+    <button type="submit">Zaloguj</button>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <p style="color:red">@Model.ErrorMessage</p>
+    }
+</form>

@@ -6,10 +6,10 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 [Authorize(Roles = "Admin")]
-public class AddStudentModel : PageModel
+public class AddCourseModel : PageModel
 {
     [BindProperty]
-    public StudentCreateDto Student { get; set; } = new();
+    public CourseCreateDto Course { get; set; } = new();
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -17,14 +17,17 @@ public class AddStudentModel : PageModel
         using var http = new HttpClient();
 
         if (!string.IsNullOrWhiteSpace(token))
-            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        {
+            http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+        }
 
-        var response = await http.PostAsJsonAsync("http://localhost:5001/api/student", Student);
+        var response = await http.PostAsJsonAsync("http://localhost:5001/api/course", Course);
 
         if (response.IsSuccessStatusCode)
-            return RedirectToPage("/Students");
+            return RedirectToPage("/Courses");
 
-        ModelState.AddModelError("", "Nie udało się dodać studenta.");
+        ModelState.AddModelError("", "Nie udało się dodać kursu.");
         return Page();
     }
 }

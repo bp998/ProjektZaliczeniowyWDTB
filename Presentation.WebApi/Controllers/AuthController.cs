@@ -1,11 +1,13 @@
 ﻿using Infrastructure.Auth;
 using Infrastructure.Persistance;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Presentation.WebApi.Controllers;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase

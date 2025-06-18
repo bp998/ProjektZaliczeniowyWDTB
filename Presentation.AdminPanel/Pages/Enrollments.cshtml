@@ -1,0 +1,36 @@
+﻿@page
+@model EnrollmentsModel
+@{
+    ViewData["Title"] = "Lista zapisów";
+}
+
+<h2>Lista zapisów</h2>
+
+<a asp-page="/EnrollStudent">Zapisz studenta na kurs</a>
+
+@if (Model.Enrollments.Count == 0)
+{
+    <p>Brak zapisów do wyświetlenia.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Kurs</th>
+                <th>Data zapisu</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrollment in Model.Enrollments)
+            {
+                <tr>
+                    <td>@enrollment.StudentName</td>
+                    <td>@enrollment.CourseTitle</td>
+                    <td>@enrollment.EnrolledAt.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -18,7 +18,7 @@ public class IndexModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         using var http = new HttpClient();
-        var response = await http.PostAsync("http://localhost:5260/api/auth/login",
+        var response = await http.PostAsync("http://localhost:5001/api/auth/login",
             new StringContent(JsonSerializer.Serialize(new { username = Username, password = Password }), Encoding.UTF8, "application/json"));
 
         if (!response.IsSuccessStatusCode)
@@ -29,6 +29,15 @@ public class IndexModel : PageModel
 
         var json = await response.Content.ReadAsStringAsync();
         var jwt = JsonDocument.Parse(json).RootElement.GetProperty("token").GetString();
+
+        Response.Cookies.Append("access_token", jwt!, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false, 
+            SameSite = SameSiteMode.Lax,
+            Expires = DateTimeOffset.UtcNow.AddHours(1)
+        });
+
 
         var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(jwt);

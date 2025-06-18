@@ -1,0 +1,17 @@
+﻿@page
+@model StudentsGraphQLModel
+
+<h2>Studenci (GraphQL)</h2>
+<table class="table">
+    <thead><tr><th>Imię</th><th>Nazwisko</th><th>Data urodzenia</th></tr></thead>
+    <tbody>
+        @foreach (var s in Model.Students)
+        {
+            <tr>
+                <td>@s.FirstName</td>
+                <td>@s.LastName</td>
+                <td>@s.BirthDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

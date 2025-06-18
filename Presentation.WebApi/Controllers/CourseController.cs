@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CourseController : ControllerBase
@@ -47,8 +48,9 @@ public class CourseController : ControllerBase
         return Ok(dto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CourseDto dto)
+    public async Task<IActionResult> Create([FromBody] CourseCreateDto dto)
     {
         var course = new Course
         {
@@ -57,9 +59,18 @@ public class CourseController : ControllerBase
         };
 
         await _repository.AddAsync(course);
-        return CreatedAtAction(nameof(Get), new { id = course.Id }, dto);
+
+        var resultDto = new CourseDto
+        {
+            Id = course.Id,
+            Title = course.Title,
+            Description = course.Description
+        };
+
+        return CreatedAtAction(nameof(Get), new { id = course.Id }, resultDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
     {
@@ -73,6 +84,7 @@ public class CourseController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

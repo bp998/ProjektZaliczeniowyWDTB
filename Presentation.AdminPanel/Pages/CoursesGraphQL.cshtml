@@ -1,0 +1,13 @@
+﻿@page
+@model CoursesGraphQLModel
+@{
+    ViewData["Title"] = "Courses (GraphQL)";
+}
+
+<h2>Courses (GraphQL)</h2>
+<ul>
+    @foreach (var c in Model.Courses)
+    {
+        <li><strong>@c.Title</strong> - @c.Description</li>
+    }
+</ul>
